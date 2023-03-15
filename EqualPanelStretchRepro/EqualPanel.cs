@@ -67,7 +67,7 @@ namespace EqualPanelStretchRepro
                     {
                         var x = availableSize.Width;
                         // x = infinite here.. how to get the available space?
-                        // For now, we do the same as Left/Right/Center alignment = but ideally we do the thing below.
+                        // For now, we do the same as Left/Right/Center alignment = but ideally we run the code that is in LINE 75.
                         return new Size((maxItemWidth * Children.Count) + (Spacing * (Children.Count - 1)), maxItemHeight);
                     }
 
