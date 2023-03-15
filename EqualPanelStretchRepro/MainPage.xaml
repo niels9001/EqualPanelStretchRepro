@@ -1,0 +1,122 @@
+﻿<Page
+    x:Class="EqualPanelStretchRepro.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:EqualPanelStretchRepro"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Name="CustomListViewStyle" TargetType="ListView">
+            <Style.Setters>
+                <Setter Property="ItemContainerStyle" Value="{StaticResource CustomListViewItemStyle}" />
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <local:EqualPanel
+                                HorizontalAlignment="{Binding (local:FrameworkElementExtensions.Ancestor).HorizontalAlignment, RelativeSource={RelativeSource Self}}"
+                                local:FrameworkElementExtensions.AncestorType="ListView"
+                                Spacing="2" />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListView">
+                            <Grid Background="LightBlue">
+                                <Border
+                                    VerticalAlignment="Stretch"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{TemplateBinding CornerRadius}" />
+                                <ItemsPresenter Margin="{TemplateBinding Padding}" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+
+
+        <Style x:Key="CustomListViewItemStyle" TargetType="ListViewItem">
+            <Style.Setters>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListViewItem">
+                            <Grid
+                                x:Name="PART_Root"
+                                Background="Red"
+                                BorderBrush="Black"
+                                BorderThickness="2">
+                                <ContentPresenter
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Foreground="White" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="64" />
+        </Grid.RowDefinitions>
+        <ListView
+            x:Name="NormalListView"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Style="{StaticResource CustomListViewStyle}">
+            <ListViewItem Content="Item 1" />
+            <ListViewItem Content="Item 2" />
+            <ListViewItem Content="Item 3" />
+        </ListView>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <!--  This causes the AvailableWidth to be Infite  -->
+                <ColumnDefinition Width="Auto" MinWidth="400" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ListView
+                x:Name="BuggyListView"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Style="{StaticResource CustomListViewStyle}">
+                <ListViewItem Content="Item 1" />
+                <ListViewItem Content="Item 2" />
+                <ListViewItem Content="Item 3" />
+            </ListView>
+            <Grid
+                Grid.Column="1"
+                Padding="16"
+                Background="Yellow">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    TextWrapping="WrapWholeWords"
+                    VerticalAlignment="Center"
+                    Text="The ListView at the top stretches as expected when HorizontalAlignment = Stretch.The ListView on the left does not: the AvailableWidth is Infinite." />
+            </Grid>
+
+
+        </Grid>
+        <ComboBox
+            x:Name="AlignmentBox"
+            Grid.Row="2"
+            Header="HorizontalAlignment"
+            Loaded="ComboBox_Loaded"
+            SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBoxItem>Left</ComboBoxItem>
+            <ComboBoxItem>Right</ComboBoxItem>
+            <ComboBoxItem>Center</ComboBoxItem>
+            <ComboBoxItem>Stretch</ComboBoxItem>
+        </ComboBox>
+    </Grid>
+</Page>
